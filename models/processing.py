@@ -31,7 +31,7 @@ def process_video(video_file, segment_length, output_dir):
             output_path = os.path.join(output_dir, f"subclip_{video_part}.wav")
             output_container = av.open(output_path, mode="w")
             output_stream = output_container.add_stream("pcm_s16le", rate=audio_stream.rate)
-            output_stream.channels = audio_stream.channels
+            # output_stream.channels = audio_stream.channels
 
             container.seek(int(adjusted_clip_start / float(audio_stream.time_base)), stream=audio_stream)
 
@@ -117,7 +117,7 @@ def create_clips(video_file, clip_timestamps, output_dir, pad_clip_start, pad_cl
             start_time = max(0, (start_time - pad_clip_start))
             end_time = min(video.duration, (end_time + pad_clip_end))
 
-            subclip = video.subclip(start_time, end_time)
+            subclip = video.subclipped(start_time, end_time)
             output_path = os.path.join(output_dir, f"{clip_number}.mp4")
             subclip.write_videofile(output_path, codec="libx264", audio_codec="aac", fps=None, audio_fps=None, logger=None, temp_audiofile=None)
 

@@ -1,3 +1,4 @@
+.gitignore
 .venv/
 dataset/
 models/__pycache__
@@ -10,3 +11,8 @@ models/mfcc_scaler.joblib
 output.log
 quantize_model.py
 package-distributions.bat
+install-linux.sh
+install-macos.sh
+run-linux.sh
+run-macos.sh
+requirements-old.txt
