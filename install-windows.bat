@@ -5,8 +5,8 @@ echo Installing application...
 set "INSTALL_DIR=%~dp0miniconda"
 
 if not exist "%INSTALL_DIR%" (
-    echo Downloading Miniconda..
-    curl -o "miniconda_installer.exe" "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe"
+    echo Downloading Miniconda...
+    curl -o "miniconda_installer.exe" "https://repo.anaconda.com/miniconda/Miniconda3-py39_25.7.0-2-Windows-x86_64.exe"
 
     echo Installing Miniconda...
     start /wait "" "miniconda_installer.exe" /S /RegisterPython=0 /AddToPath=0 /InstallationType=JustMe /D=%INSTALL_DIR%
@@ -14,11 +14,11 @@ if not exist "%INSTALL_DIR%" (
 )
 
 echo Creating conda environment...
-call miniconda\Scripts\activate.bat
+call "%INSTALL_DIR%\Scripts\activate.bat"
 
 if not exist "%INSTALL_DIR%\envs\app_env" (
     echo Creating python environment...
-    call conda create -y -n app_env python=3.10 -q
+    call conda create -y -n app_env python=3.10.11 -q
 )
 
 call conda activate app_env
@@ -30,7 +30,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo Installing PyTorch...
-call conda install -y pytorch=2.4.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+call conda install -y pytorch=2.6.0 pytorch-cuda=12.4 -c pytorch -c nvidia
 
 echo Installing additional requirements...
 call pip install -r requirements.txt
