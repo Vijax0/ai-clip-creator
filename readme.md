@@ -1,32 +1,42 @@
 # AI Clip Creator
 
-AI Clip Creator is a machine learning tool that automatically identifies and extracts highlight-worthy moments from long videos, creating standalone clips without manual editing.  
+AI Clip Creator is an AI tool that automatically identifies and creates highlight clips from streams and videos without manual editing.
 
 **Note:** This is an early prototype and may not function as intended.
 
-## Purpose
-
-A tool created specifically for streamers, content creators, video producers, or anyone who has long-form video content that they need to repurpose for short-form platforms and wants to automate the process of finding and clipping the best moments.  
-
 ## Features
 
-- Identifies engaging moments like high-energy reactions, exciting gameplay, or key events.
-- Creates properly timed clips with natural start and end points.
-- Simple web interface for uploading videos and downloading clips.
+- **Easy setup**: Installer provided for Windows and Docker images for other OSes.
+- **Completely local and offline**: No external profiles or internet connection is required.
+- **Handles videos of any length**: Choose between short YouTube videos or multi-hour Twitch VODs.
+- **Complete web interface**: User-friendly front end for ease of use.
 
 ## Installation
 
-1. Download the release for your OS.
-2. Extract the contents of the zip file.
-3. Run the `install` file according to your OS.
-4. Launch the application with the `run` file.
-5. Access the front end with `http://localhost:5000`.
+### Requirements
 
-**Note:** The MacOS installer has not been fully tested and may not work as intended.
+- 32GB of free space
+- 8GB RAM minimum, 16GB recommended
+- NVIDIA GPU with CUDA support (heavily recommended, but not strictly required)
+
+### Windows
+
+1. Download the latest version under releases.
+2. Extract the contents of the zip file.
+3. Run the `install-windows.bat` file and wait for the installation to complete.
+4. Launch the application with the `run.bat` file.
+5. Access the front end with `http://localhost:5000` or use the link.
+
+### Docker
+
+1. Install [Docker](https://docs.docker.com/engine/install/) if not already installed.
+2. Pull the [latest](https://hub.docker.com/r/vijax0/ai-clip-creator/tags) image from Docker hub.
+3. Run with port 5000 exposed: `docker run -p 5000:5000 vijax0/ai-clip-creator:tagname`.
+4. Access the web interface with `http://localhost:5000` or use the link.
 
 ## Contributing
 
-Contributions of all kinds, including bug fixes, opening issues, feature requests, and code contributions are all welcome and appreciated. If you encounter any issues or have any feedback, do not be afraid to open an issue or submit a pull request.
+Contributions of all kinds are welcome. If you encounter any issues or have any feedback, do not be afraid to open an issue or submit a pull request.
 
 ## License
 
