@@ -10,3 +10,4 @@ models/mfcc_scaler.joblib
 output.log
 quantize_model.py
 package-distributions.bat
+improvements.txt

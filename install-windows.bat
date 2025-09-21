@@ -18,7 +18,7 @@ call "%INSTALL_DIR%\Scripts\activate.bat"
 
 if not exist "%INSTALL_DIR%\envs\app_env" (
     echo Creating python environment...
-    call conda create -y -n app_env python=3.10.11 -q
+    call conda create -y -n app_env python=3.11 -q
 )
 
 call conda activate app_env
@@ -30,7 +30,12 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo Installing PyTorch...
-call conda install -y pytorch=2.6.0 pytorch-cuda=12.4 -c pytorch -c nvidia
+call conda install pytorch==2.5.1 -c pytorch -c nvidia -y
+if %errorlevel% gtr 1 (
+    echo ERROR: PyTorch installation failed with error code %errorlevel%!
+    pause
+    exit /b %errorlevel%
+)
 
 echo Installing additional requirements...
 call pip install -r requirements.txt
