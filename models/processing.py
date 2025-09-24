@@ -1,65 +1,45 @@
-from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy import VideoFileClip
 import numpy as np
 import librosa
 import torch
 import math
-import av
 import os
 
 
 def process_video(video_file, segment_length, output_dir):
     os.makedirs(output_dir, exist_ok=True)
-    container = None
+
+    video = VideoFileClip(video_file)
+    audio = video.audio
 
     try:
-        container = av.open(video_file)
-        audio_stream = next(stream for stream in container.streams if stream.type == "audio")
+        duration = audio.duration
+        segment_start = 0
+        segment_end = segment_length
+        segment_name = 0
 
-        video_paths = []
-        video_part = 0
-        clip_start = 0.0
+        output_paths = []
+        while segment_start < duration:
+            segment = audio.subclipped(segment_start, segment_end)
+            output_path = os.path.join(output_dir, f"segment_{segment_name}.wav")
+            segment.write_audiofile(output_path, fps=None, logger=None, codec="pcm_s16le")
 
-        start_time_offset = audio_stream.start_time * float(audio_stream.time_base)
-        duration = audio_stream.duration * float(audio_stream.time_base)
+            segment_start = segment_end
+            segment_end += segment_length
+            if segment_end > duration:
+                segment_end = duration
 
-        while clip_start < duration:
-            clip_end = min(clip_start + segment_length, duration)
+            output_paths.append(output_path)
+            segment_name += 1
 
-            adjusted_clip_start = clip_start + start_time_offset
-            adjusted_clip_end = clip_end + start_time_offset
-
-            output_path = os.path.join(output_dir, f"subclip_{video_part}.wav")
-            output_container = av.open(output_path, mode="w")
-            output_stream = output_container.add_stream("pcm_s16le", rate=audio_stream.rate)
-            # output_stream.channels = audio_stream.channels
-
-            container.seek(int(adjusted_clip_start / float(audio_stream.time_base)), stream=audio_stream)
-
-            for frame in container.decode(audio_stream):
-                frame_time = frame.pts * float(frame.time_base)
-
-                if frame_time >= adjusted_clip_end:
-                    break
-
-                if frame_time >= adjusted_clip_start:
-                    output_container.mux(output_stream.encode(frame))
-
-            output_container.close()
-            video_paths.append(output_path)
-
-            clip_start = clip_end
-            video_part += 1
-
-        container.close()
-        return video_paths
+        return output_paths
 
     finally:
-        if container:
-            container.close()
+        video.close()
 
 
 def make_prediction(model, scaler, video_path, threshold=0.5, device="cpu"):
-    audio, sr = librosa.load(video_path, sr=None, mono=True)
+    audio, sr = librosa.load(video_path, sr=22050, mono=True)
     mfcc = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=40, n_fft=4096, hop_length=2048)
 
     mfcc = torch.Tensor(scaler.transform(mfcc.T).transpose(-1, 0)).unsqueeze(0)
@@ -125,5 +105,6 @@ def create_clips(video_file, clip_timestamps, output_dir, pad_clip_start, pad_cl
             clip_number += 1
         
         return clip_paths
+
     finally:
         video.close()
