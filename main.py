@@ -135,6 +135,7 @@ def get_config():
 
     except ValueError as e:
         print(e)
+
     finally:
         return jsonify({"status": "success", "message": "Settings succesfully updated"})
 

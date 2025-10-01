@@ -31,10 +31,10 @@ if %ERRORLEVEL% NEQ 0 (
 
 echo Installing PyTorch...
 call conda install pytorch==2.5.1 -c pytorch -c nvidia -y
-if %errorlevel% gtr 1 (
-    echo ERROR: PyTorch installation failed with error code %errorlevel%!
+if %ERRORLEVEL% GTR 1 (
+    echo ERROR: PyTorch installation failed with error code %ERRORLEVEL%!
     pause
-    exit /b %errorlevel%
+    exit /b %ERRORLEVEL%
 )
 
 echo Installing additional requirements...
