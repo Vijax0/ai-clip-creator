@@ -100,35 +100,6 @@ body {
     margin: 0 auto;
 }
 
-.image-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 50px;
-    height: 50px;
-}
-
-.image-container img {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: auto;
-}
-
-.hover-image {
-    opacity: 0;
-}
-
-.image-container:hover .default-image {
-    opacity: 0;
-}
-
-.image-container:hover .hover-image {
-    opacity: 1;
-    cursor: pointer;
-}
-
 #settings-menu {
     position: fixed;
     top: 0;
@@ -166,4 +137,28 @@ body {
     justify-content: space-between;
     width: 100%;
     align-items: center;
+}
+
+.clips-menu {
+    position: fixed;
+    right: -10.5rem;
+    top: 0;
+    width: 15rem;
+    height: 100%;
+    background-color: #222222;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.3);
+    transition: ease 0.3s;
+}
+
+#folder-icon {
+    height: 3.5rem;
+    width: 3.5rem;
+    padding-left: 5px;
+    transition: ease 0.2s;
+}
+
+#folder-icon:hover {
+    height: 3.7rem;
+    width: 3.7rem;
+    cursor: pointer;
 }

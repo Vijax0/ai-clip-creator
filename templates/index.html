@@ -81,11 +81,6 @@
             </form>
         </div>
 
-        <div class="image-container">
-            <img src="/static/images/folder-outline.png" class="default-image">
-            <img src="/static/images/folder-open-outline.png" class="hover-image" id="clips-folder-button">
-        </div>
-
         <div class="main-content">
             <div id="video-upload">
                 <h1>AI Clip Creator</h1>
@@ -109,6 +104,14 @@
                     {% endfor %}
                 {% endif %}
             </div>
+        </div>
+
+        <div class="clips-menu" id="clips-menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" id="folder-icon">
+                <path d="M216 72h-85.33l-14.14-14.14A20 20 0 0 0 102.39 52H40a20 20 0 0 0-20 
+                20v112a20 20 0 0 0 20 20h176a20 20 0 0 0 
+                20-20V92a20 20 0 0 0-20-20zM44 84h168v96H44V84z" fill="black"/>
+            </svg>
         </div>
 
         <script src="/static/index.js"></script>

@@ -46,17 +46,6 @@ configForm.addEventListener("keydown", function(event) {
 
 document.getElementById("save-settings").addEventListener("click", saveSettings)
 
-document.getElementById("clips-folder-button").addEventListener("click", () => {
-    fetch("/open-clips-folder")
-    .then(response => {
-        if (response.ok) {
-            console.log("Folder successfully opened.");
-        } else {
-            console.error("Failed to open folder.")
-        };
-    });
-});
-
 document.addEventListener("DOMContentLoaded", function() {
     const valueContainers = document.querySelectorAll(".value-container");
 
@@ -143,4 +132,15 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("folder-icon").addEventListener("click", function() {
+        const element = document.getElementById("clips-menu");
+        if (element.style.right == "0rem") {
+            element.style.right = "-10.5rem"
+        } else {
+            element.style.right = "0rem";
+        };
+    });
 });
