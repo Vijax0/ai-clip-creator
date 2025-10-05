@@ -74,7 +74,7 @@ def find_clips(predictions, sr, minimum_length, maximum_length, number_of_clips)
                 end_idx += 1
 
             start_sample = start_idx * 2048
-            end_sample = (end_idx - 1) * 2048
+            end_sample = end_idx * 2048
 
             start_time = start_sample / sr
             end_time = end_sample / sr
