@@ -54,7 +54,7 @@ def make_prediction(model, scaler, video_path, threshold=0.5, device="cpu"):
     return predictions, sr
 
 
-def find_clips(predictions, sr, minimum_length, maximum_length, number_of_clips):
+def find_clips(predictions, sr, minimum_length, maximum_length, number_of_clips, leniency):
     clips = []
     start_idx = np.argmax(predictions)
 
@@ -66,12 +66,29 @@ def find_clips(predictions, sr, minimum_length, maximum_length, number_of_clips)
             break
 
         segment = predictions[start_idx:start_idx + minimum_length]
-        if 0 in segment:
+        counter = 0
+        for prediction in segment:
+            if prediction == 0:
+                counter += 1
+                if counter > leniency:
+                    break
+            else:
+                counter = 0
+
+        if counter > leniency:
             start_idx = start_idx + (len(segment) - 1 - segment[::-1].index(0)) + 1
         else:
             end_idx = start_idx + minimum_length
-            while end_idx < len(predictions) and predictions[end_idx] != 0 and (end_idx - start_idx) < maximum_length:
+            while end_idx < len(predictions) and (end_idx - start_idx) < maximum_length:
+                if predictions[end_idx] == 0:
+                    couter += 1
+                    if counter > leniency:
+                        break
+                else:
+                    counter = 0
                 end_idx += 1
+
+            end_idx -= counter
 
             start_sample = start_idx * 2048
             end_sample = end_idx * 2048

@@ -44,6 +44,7 @@ class Config:
         self.number_of_clips = config.get("number_of_clips", 2)
 
         self.threshold = config.get("threshold", 0.7)
+        self.leniency = config.get("leniency", 0)
 
     def get_device(self):
         return "cuda" if self.use_gpu else "cpu"
@@ -94,7 +95,7 @@ def main():
 
                     print("Creating clips...")
 
-                    clip_timestamps = find_clips(predictions, sr, config.minimum_clip_length, config.maximum_clip_length, config.number_of_clips)
+                    clip_timestamps = find_clips(predictions, sr, config.minimum_clip_length, config.maximum_clip_length, config.number_of_clips, config.leniency)
                     clip_paths = create_clips(video_path, clip_timestamps, clip_folder, config.pad_clip_start, config.pad_clip_end)
                     clip_urls = [os.path.relpath(clip_path, static_folder).replace("\\", "/") for clip_path in clip_paths]
 
@@ -130,6 +131,7 @@ def get_config():
         config.number_of_clips = int(request.form.get("number-of-clips"))
 
         config.threshold = float(request.form.get("threshold"))
+        config.leniency = int(request.form.get("leniency"))
         if previous_device != config.use_gpu and model:
             model = load_model(VideoAutoClipper2(), model_path, device=config.get_device())
 
