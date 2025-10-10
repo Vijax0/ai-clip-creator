@@ -23,12 +23,13 @@ class Config:
             "pad_clip_start": 1.0,
             "pad_clip_end": 1.0,
             "number_of_clips": 2,
-            "threshold": 0.7
+            "threshold": 0.7,
+            "leniency": 0
         }
 
         if not os.path.exists(config_file_path):
             with open(config_file_path, "w") as f:
-                json.dump(config_default, f)
+                json.dump(config_default, f, indent="\t")
 
         with open(config_file_path, "r") as f:
             config = json.load(f)

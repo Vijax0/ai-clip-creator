@@ -1,1 +1,12 @@
-{"use_gpu": false, "auto_load_model": false, "segment_length": 600, "minimum_clip_length": 5, "maximum_clip_length": 30, "pad_clip_start": 1.0, "pad_clip_end": 1.0, "number_of_clips": 2, "threshold": 0.7}
+{
+	"use_gpu": false,
+	"auto_load_model": false,
+	"segment_length": 600,
+	"minimum_clip_length": 5,
+	"maximum_clip_length": 30,
+	"pad_clip_start": 1.0,
+	"pad_clip_end": 1.0,
+	"number_of_clips": 2,
+	"threshold": 0.7,
+	"leniency": 0
+}
