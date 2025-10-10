@@ -81,7 +81,7 @@ def find_clips(predictions, sr, minimum_length, maximum_length, number_of_clips,
             end_idx = start_idx + minimum_length
             while end_idx < len(predictions) and (end_idx - start_idx) < maximum_length:
                 if predictions[end_idx] == 0:
-                    couter += 1
+                    counter += 1
                     if counter > leniency:
                         break
                 else:
