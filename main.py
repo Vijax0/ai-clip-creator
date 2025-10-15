@@ -7,6 +7,7 @@ from models.processing import process_video, make_prediction, find_clips, create
 from flask import Flask, render_template, request, jsonify
 from models.model import VideoAutoClipper2, load_model
 from werkzeug.utils import secure_filename
+from datetime import datetime
 import subprocess
 import joblib
 import json
@@ -51,10 +52,15 @@ class Config:
         return "cuda" if self.use_gpu else "cpu"
 
 
+def get_folder_name():
+    return datetime.now().strftime("%Y-%m-%d")
+
+
 app = Flask(__name__)
 video_folder = os.path.abspath("./static/uploads")
 clip_folder = os.path.abspath("./static/clips")
 static_folder = os.path.abspath("./static")
+output_folder = os.path.abspath(os.path.join(clip_folder, get_folder_name()))
 
 os.makedirs(video_folder, exist_ok=True)
 os.makedirs(clip_folder, exist_ok=True)
@@ -97,7 +103,7 @@ def main():
                     print("Creating clips...")
 
                     clip_timestamps = find_clips(predictions, sr, config.minimum_clip_length, config.maximum_clip_length, config.number_of_clips, config.leniency)
-                    clip_paths = create_clips(video_path, clip_timestamps, clip_folder, config.pad_clip_start, config.pad_clip_end)
+                    clip_paths = create_clips(video_path, clip_timestamps, output_folder, config.pad_clip_start, config.pad_clip_end)
                     clip_urls = [os.path.relpath(clip_path, static_folder).replace("\\", "/") for clip_path in clip_paths]
 
                     print("Done!")
