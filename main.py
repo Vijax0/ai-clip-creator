@@ -8,7 +8,6 @@ from flask import Flask, render_template, request, jsonify
 from models.model import VideoAutoClipper2, load_model
 from werkzeug.utils import secure_filename
 from datetime import datetime
-import subprocess
 import joblib
 import json
 
@@ -25,7 +24,7 @@ class Config:
             "pad_clip_end": 1.0,
             "number_of_clips": 2,
             "threshold": 0.7,
-            "leniency": 0
+            "leniency": 2
         }
 
         if not os.path.exists(config_file_path):
@@ -46,7 +45,7 @@ class Config:
         self.number_of_clips = config.get("number_of_clips", 2)
 
         self.threshold = config.get("threshold", 0.7)
-        self.leniency = config.get("leniency", 0)
+        self.leniency = config.get("leniency", 2)
 
     def get_device(self):
         return "cuda" if self.use_gpu else "cpu"

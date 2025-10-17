@@ -8,5 +8,5 @@
 	"pad_clip_end": 1.0,
 	"number_of_clips": 2,
 	"threshold": 0.7,
-	"leniency": 0
+	"leniency": 2
 }
