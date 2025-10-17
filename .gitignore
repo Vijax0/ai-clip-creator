@@ -4,10 +4,10 @@ models/__pycache__
 models/test.py
 models/train.py
 models/training_utils.py
-models/VideoAutoClipperBase.pt
-models/VideoAutoClipper.pt
+models/VideoAutoClipper*
 models/mfcc_scaler.joblib
 output.log
 quantize_model.py
 package-distributions.bat
 improvements.txt
+static/clips/*
