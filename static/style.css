@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     background-color: #2A2A2A;
     color: #D3D3D3;
@@ -7,7 +13,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-left: 20rem;
+    margin: 0 5rem 0 20.5rem;
 }
 
 #video-upload {
@@ -140,6 +146,8 @@ body {
 }
 
 .clips-menu {
+    display: flex;
+    flex-direction: row;
     position: fixed;
     right: -10.5rem;
     top: 0;
@@ -150,6 +158,13 @@ body {
     transition: ease 0.3s;
 }
 
+#clips-menu > hr {
+    border: 0;
+    width: 1px;
+    background-color:#444;
+    margin: 0.5rem 1rem;
+}
+
 #folder-icon {
     height: 3.5rem;
     width: 3.5rem;
@@ -158,7 +173,51 @@ body {
 }
 
 #folder-icon:hover {
-    height: 3.7rem;
-    width: 3.7rem;
+    transform: scale(1.06);
     cursor: pointer;
+}
+
+.file-browser {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+    gap: 0.5rem;
+}
+
+.folder-name {
+    cursor: pointer;
+    user-select: none;
+}
+
+.folder-name::before {
+    content: "▶";
+    display: inline-block;
+    margin-right: 0.3rem;
+}
+
+.folder-name.expanded::before {
+    transform: rotate(90deg);
+}
+
+.files {
+    display: none;
+    flex-direction: column;
+    padding: 0.2rem 0 0 1rem;
+    gap: 0.1rem;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.files.show {
+    display: flex;
+}
+
+.file {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+}
+
+.file svg {
+    width: 1rem;
 }

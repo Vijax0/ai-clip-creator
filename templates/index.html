@@ -120,6 +120,39 @@
                 20v112a20 20 0 0 0 20 20h176a20 20 0 0 0 
                 20-20V92a20 20 0 0 0-20-20zM44 84h168v96H44V84z" fill="black"/>
             </svg>
+
+            <hr>
+
+            <div class="file-browser">
+                {% if folders %}
+                    {% for folder in folders %}
+                    <div class="folder">
+                        <p class="folder-name">{{folder}}</p>
+                        <div class="files">
+                            {% for file in folders[folder] %}
+                                <div class="file">
+                                    <p>{{file}}</p>
+                                    <a href="{{ url_for('static', filename='clips' + '/' + folder + '/' + file) }}" download>
+                                        <svg fill="#D3D3D3" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 498.779 498.779">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                        stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><g>
+                                        <g><polygon points="498.779,366.435 452.881,366.435 452.881,439.875 45.9,439.875
+                                            45.9,367.965 0,367.965 0,485.774 498.779,485.774 "></polygon> <polygon points="134.086,177.664
+                                            70.334,177.664 254.209,406.215 438.082,177.664 374.332,177.664 374.332,13.005 134.086,13.005 ">
+                                        </polygon></g></g></g>
+                                        </svg>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <p>No files found.</p>
+                {% endif %}
+            </div>
         </div>
 
         <script src="/static/index.js"></script>

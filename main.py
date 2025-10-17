@@ -56,6 +56,18 @@ def get_folder_name():
     return datetime.now().strftime("%Y-%m-%d")
 
 
+def get_files(clip_folder):
+    folder_list = os.listdir(clip_folder)
+    all_files = {}
+
+    for folder in folder_list:
+        folder_path = os.path.join(clip_folder, folder)
+        files = os.listdir(folder_path)
+        all_files[folder] = files
+
+    return all_files
+
+
 app = Flask(__name__)
 video_folder = os.path.abspath("./static/uploads")
 clip_folder = os.path.abspath("./static/clips")
@@ -108,7 +120,7 @@ def main():
 
                     print("Done!")
 
-                    return render_template("index.html", config=config, clips=clip_urls)
+                    return render_template("index.html", config=config, clips=clip_urls, folders=get_files(clip_folder))
 
             except Exception as e:
                print(e)
@@ -118,7 +130,7 @@ def main():
                     for path in os.listdir(video_folder):
                         os.remove(os.path.join(video_folder, path))
 
-    return render_template("index.html", config=config)
+    return render_template("index.html", config=config, folders=get_files(clip_folder))
 
 
 @app.route("/get-config", methods=["POST"])
@@ -155,21 +167,6 @@ def save_config():
         json.dump(config.__dict__, f)
     
     return jsonify({"status": "success", "message": "Settings succesfully updated"})
-
-
-@app.route("/open-clips-folder")
-def open_clips_folder():
-    system_name = os.name
-    system_platform = sys.platform
-
-    if system_name == "nt":
-        os.startfile(clip_folder)
-    elif system_platform == "darwin":
-        subprocess.run(["open", clip_folder])
-    else:
-        subprocess.run(["xdg-open", clip_folder])
-
-    return "Directory opened", 200
 
 
 if __name__ == "__main__":

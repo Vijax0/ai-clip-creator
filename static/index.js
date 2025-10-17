@@ -144,3 +144,14 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const folderNames = document.querySelectorAll(".folder-name");
+    
+    folderNames.forEach(folderName => {
+        folderName.addEventListener("click", function() {
+            this.classList.toggle("expanded");
+            this.nextElementSibling.classList.toggle("show");
+        });
+    });
+});
