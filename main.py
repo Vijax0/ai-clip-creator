@@ -5,11 +5,12 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from models.processing import process_video, make_prediction, find_clips, create_clips
 from flask import Flask, render_template, request, jsonify
-from models.model import VideoAutoClipper2, load_model
+from models.model import VideoAutoClipper, load_model
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import joblib
 import json
+import re
 
 
 class Config:
@@ -55,13 +56,18 @@ def get_folder_name():
     return datetime.now().strftime("%Y-%m-%d")
 
 
+def numerical_sort(value):
+    numbers = re.findall(r"\d+", value)
+    return int(numbers[0]) if numbers else 0
+
+
 def get_files(clip_folder):
     folder_list = os.listdir(clip_folder)
     all_files = {}
 
     for folder in folder_list:
         folder_path = os.path.join(clip_folder, folder)
-        files = os.listdir(folder_path)
+        files = sorted(os.listdir(folder_path), key=numerical_sort)
         all_files[folder] = files
 
     return all_files
@@ -82,7 +88,7 @@ scaler_path = os.path.abspath("./models/mfcc_scaler.joblib")
 config_file_path = os.path.abspath("./config.json")
 config = Config(config_file_path)
 
-model = load_model(VideoAutoClipper2(), model_path, device=config.get_device()) if config.auto_load_model else False
+model = load_model(VideoAutoClipper(), model_path, device=config.get_device()) if config.auto_load_model else False
 
 @app.route("/", methods=["GET", "POST"])
 def main():
@@ -100,7 +106,7 @@ def main():
                     video.save(video_path)
 
                     if not model:
-                        model = load_model(VideoAutoClipper2(), model_path, device=config.get_device())
+                        model = load_model(VideoAutoClipper(), model_path, device=config.get_device())
 
                     video_paths = process_video(video_path, config.segment_length, video_folder)
                     predictions = []
@@ -151,7 +157,7 @@ def get_config():
         config.threshold = float(request.form.get("threshold"))
         config.leniency = int(request.form.get("leniency"))
         if previous_device != config.use_gpu and model:
-            model = load_model(VideoAutoClipper2(), model_path, device=config.get_device())
+            model = load_model(VideoAutoClipper(), model_path, device=config.get_device())
 
     except ValueError as e:
         print(e)
@@ -163,7 +169,7 @@ def get_config():
 @app.route("/save-config", methods=["POST"])
 def save_config():
     with open(config_file_path, "w") as f:
-        json.dump(config.__dict__, f)
+        json.dump(config.__dict__, f, indent="\t")
     
     return jsonify({"status": "success", "message": "Settings succesfully updated"})
 
