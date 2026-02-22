@@ -2,7 +2,7 @@
 
 AI Clip Creator is an AI tool that automatically identifies and creates highlight clips from streams and videos without manual editing.
 
-**Note:** This is an early prototype and may not function as intended.
+**Note:** This project is no longer being actively maintained.
 
 ## Features
 
@@ -44,10 +44,6 @@ AI Clip Creator is an AI tool that automatically identifies and creates highligh
 5. Install PyTorch. See [PyTorch's](https://pytorch.org/get-started/locally/?ajs_aid=a9037fe1-adf0-408d-a665-080a7a56d61d) installation page for more details, or use `pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu124`.
 6. Start the application by running the `main.py` file.
 7. Access the web interface with `http://localhost:5000` or use the link.
-
-## Contributing
-
-Contributions of all kinds are welcome. If you encounter any issues or have any feedback, feel free to open an issue or submit a pull request.
 
 ## License
 
