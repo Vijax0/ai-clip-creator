@@ -95,45 +95,52 @@ def main():
     global model
 
     if request.method == "POST":
-        if "video" in request.files:
-            try:
-                video = request.files["video"]
-                if video:
-                    print("Processing video...")
+        if "video" not in request.files:
+            return jsonify({"status": "error", "message": "No video file was provided."}), 400
 
-                    filename = secure_filename(video.filename)
-                    video_path = os.path.join(video_folder, filename)
-                    video.save(video_path)
+        try:
+            video = request.files["video"]
 
-                    if not model:
-                        model = load_model(VideoAutoClipper(), model_path, device=config.get_device())
+            if not video or video.filename == "":
+                return jsonify({"status": "error", "message": "Please select an MP4 video to upload."}), 400
 
-                    video_paths = process_video(video_path, config.segment_length, video_folder)
-                    predictions = []
+            print("Processing video...")
 
-                    print("Making predictions...")
+            filename = secure_filename(video.filename)
+            video_path = os.path.join(video_folder, filename)
+            video.save(video_path)
 
-                    for path in video_paths:
-                        prediction, sr = make_prediction(model, joblib.load(scaler_path), path, threshold=config.threshold, device=config.get_device())
-                        predictions.extend(prediction)
+            if not model:
+                model = load_model(VideoAutoClipper(), model_path, device=config.get_device())
 
-                    print("Creating clips...")
+            video_paths = process_video(video_path, config.segment_length, video_folder)
+            predictions = []
 
-                    clip_timestamps = find_clips(predictions, sr, config.minimum_clip_length, config.maximum_clip_length, config.number_of_clips, config.leniency)
-                    clip_paths = create_clips(video_path, clip_timestamps, output_folder, config.pad_clip_start, config.pad_clip_end)
-                    clip_urls = [os.path.relpath(clip_path, static_folder).replace("\\", "/") for clip_path in clip_paths]
+            print("Making predictions...")
 
-                    print("Done!")
+            scaler = joblib.load(scaler_path)
+            for path in video_paths:
+                prediction, sr = make_prediction(model, scaler, path, threshold=config.threshold, device=config.get_device())
+                predictions.extend(prediction)
 
-                    return render_template("index.html", config=config, clips=clip_urls, folders=get_files(clip_folder))
+            print("Creating clips...")
 
-            except Exception as e:
-               print(e)
+            clip_timestamps = find_clips(predictions, sr, config.minimum_clip_length, config.maximum_clip_length, config.number_of_clips, config.leniency)
+            clip_paths = create_clips(video_path, clip_timestamps, output_folder, config.pad_clip_start, config.pad_clip_end)
+            clip_urls = [os.path.relpath(clip_path, static_folder).replace("\\", "/") for clip_path in clip_paths]
 
-            finally:
-                if len(os.listdir(video_folder)) != 0:
-                    for path in os.listdir(video_folder):
-                        os.remove(os.path.join(video_folder, path))
+            print("Done!")
+
+            return jsonify({"status": "success", "clips": clip_urls, "message": "Upload complete."})
+
+        except Exception as e:
+            print(f"Upload failed: {e}")
+            return jsonify({"status": "error", "message": f"Upload failed: {e}"}), 500
+
+        finally:
+            if len(os.listdir(video_folder)) != 0:
+                for path in os.listdir(video_folder):
+                    os.remove(os.path.join(video_folder, path))
 
     return render_template("index.html", config=config, folders=get_files(clip_folder))
 
